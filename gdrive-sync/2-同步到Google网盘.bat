@@ -1,11 +1,11 @@
 @echo off
-title Í¬²½µ½ Google ÍøÅÌ - ÌììûÖªÊ¶¿â
+title Í¬ Google  - ÖªÊ¶
 setlocal
 cd /d "%~dp0"
 set QUIET=%~1
 
 echo ==================================================
-echo    ÌììûÖªÊ¶¿â µ½ Google ÍøÅÌ  Í¬²½
+echo    ÖªÊ¶  Google   Í¬
 echo    %date% %time%
 echo ==================================================
 echo.
@@ -13,51 +13,51 @@ echo.
 if not exist "%~dp0rclone.exe" goto :noexe
 if not exist "%~dp0rclone.conf" goto :noconf
 
-echo   ¼ì²éÍøÂç...
+echo   ...
 powershell -NoProfile -Command "try { $c = New-Object Net.Sockets.TcpClient; $t = $c.BeginConnect('www.google.com', 443, $null, $null); if ($t.AsyncWaitHandle.WaitOne(4000)) { $c.EndConnect($t); $c.Close(); exit 0 } else { $c.Close(); exit 1 } } catch { exit 1 }"
 if errorlevel 1 goto :nonet
 
 set RC=%~dp0rclone.exe
 set CONF=%~dp0rclone.conf
-set SRC=C:\ProgramData\Lenovo\AIAgent\kd\user\10338710475
-set OVL=C:\Users\intpj\Tianxi\kb-server\data\overlay
-set DEST=gdrive:ÖªÊ¶¿â±¸·Ý
+set SRC=%KB_NATIVE_DIR%
+set OVL=%KB_OVERLAY_DIR%
+set DEST=gdrive:ÖªÊ¶â±¸
 
 echo.
-echo   [1/5] ±Ê¼ÇÄÚÈÝ cusnote
+echo   [1/5] Ê¼ cusnote
 "%RC%" copy "%SRC%\cusnote" "%DEST%/cusnote" --config "%CONF%" --transfers 8 --checkers 16 --progress --stats 30s --log-file "%~dp0sync-log.txt" --log-level NOTICE
 echo.
-echo   [2/5] ËõÂÔÍ¼ cloudthumb
+echo   [2/5] Í¼ cloudthumb
 "%RC%" copy "%SRC%\cloudthumb" "%DEST%/cloudthumb" --config "%CONF%" --transfers 8 --checkers 16 --stats 30s --log-file "%~dp0sync-log.txt" --log-level NOTICE
 echo.
-echo   [3/5] ËõÂÔÍ¼ notethumb
+echo   [3/5] Í¼ notethumb
 "%RC%" copy "%SRC%\notethumb" "%DEST%/notethumb" --config "%CONF%" --transfers 8 --checkers 16 --stats 30s --log-file "%~dp0sync-log.txt" --log-level NOTICE
 echo.
-echo   [4/5] Ë÷ÒýÊý¾Ý¿â db
+echo   [4/5] Ý¿ db
 "%RC%" copy "%SRC%\db" "%DEST%/db" --config "%CONF%" --transfers 8 --checkers 16 --stats 30s --log-file "%~dp0sync-log.txt" --log-level NOTICE
 echo.
-echo   [5/5] ÊÖ»ú¶Ë±Ê¼Ç
-"%RC%" copy "%OVL%" "%DEST%/ÊÖ»ú¶Ë±Ê¼Ç" --config "%CONF%" --transfers 8 --checkers 16 --stats 30s --log-file "%~dp0sync-log.txt" --log-level NOTICE
+echo   [5/5] Ö»Ë±Ê¼
+"%RC%" copy "%OVL%" "%DEST%/Ö»Ë±Ê¼" --config "%CONF%" --transfers 8 --checkers 16 --stats 30s --log-file "%~dp0sync-log.txt" --log-level NOTICE
 goto :done
 
 :noexe
-echo   [´íÎó] ÕÒ²»µ½ rclone.exe£¬ÇëÈ·ÈÏ±¾³ÌÐòÔÚ gdrive-sync ÎÄ¼þ¼ÐÀïÔËÐÐ¡£
+echo   [] Ò² rclone.exeÈ·Ï± gdrive-sync Ä¼Ð¡
 goto :end
 
 :noconf
-echo   [ÌáÊ¾] »¹Ã»ÓÐÁ¬½Ó Google ÕËºÅ¡£
-echo   ÇëÏÈÔËÐÐ¡¸1-Á¬½ÓGoogleÕËºÅ.bat¡¹Íê³ÉµÇÂ¼¡£
+echo   [Ê¾] Ã» Google ËºÅ¡
+echo   Ð¡1-GoogleËº.batÉµÂ¼
 goto :end
 
 :nonet
-echo   [ÌáÊ¾] ¼ì²â²»µ½ Google ÍøÂç£¬VPN ¿ÉÄÜÃ»ÓÐÁ¬½Ó¡£
-echo   ÇëÏÈÁ¬½Ó Hide.me VPN ºóÔÙÍ¬²½¡£
+echo   [Ê¾] â²» Google ç£¬VPN Ã»Ó¡
+echo    Hide.me VPN Í¬
 goto :end
 
 :done
 echo.
-echo   Í¬²½½áÊø¡£´ò¿ª Google ÍøÅÌ²é¿´¡¸ÖªÊ¶¿â±¸·Ý¡¹ÎÄ¼þ¼Ð¡£
-echo   Èç¹ûÉÏÃæ³öÏÖ ERROR ×ÖÑù£¬Çë°Ñ±¾´°¿Ú½ØÍ¼·¢¸øÌììû¡£
+echo   Í¬ Google Ì²é¿´ÖªÊ¶â±¸Ý¡Ä¼Ð¡
+echo    ERROR Ñ±Ú½Í¼
 
 :end
 echo.
