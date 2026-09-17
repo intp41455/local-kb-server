@@ -1,0 +1,26 @@
+{
+  "name": "知识库随行版",
+  "short_name": "知识库",
+  "description": "手机端随时查看与整理个人知识库；离线可用，电脑开机时自动同步。",
+  "lang": "zh-CN",
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#f6f5f4",
+  "theme_color": "#f6f5f4",
+  "icons": [
+    {
+      "src": "/icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

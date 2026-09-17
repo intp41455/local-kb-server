@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "diagram_type": "architecture",
+  "meta": {
+    "title": "本地知识库服务 · 电脑与手机双向同步",
+    "locale": "zh-CN",
+    "quality_profile": "showcase",
+    "viewBox": [1000, 510],
+    "output": "docs/architecture.html"
+  },
+  "components": [
+    { "id": "native", "type": "database", "label": "原生知识库目录", "sublabel": "只读 · 不修改原应用数据", "pos": [56, 100], "size": [176, 70] },
+    { "id": "overlay", "type": "database", "label": "overlay 叠加层", "sublabel": "手机端新建的笔记", "pos": [56, 268], "size": [176, 70] },
+    { "id": "merge", "type": "backend", "label": "合并与去重", "sublabel": "标题归一化 · 按更新时间排序", "pos": [300, 184], "size": [176, 76], "tag": "两路合一" },
+    { "id": "server", "type": "backend", "label": "本地服务", "sublabel": "Python 1321 行 · 零第三方依赖", "pos": [540, 184], "size": [184, 76], "tag": "HTTPS 8788 + HTTP 8787" },
+    { "id": "pwa", "type": "frontend", "label": "手机端 PWA", "sublabel": "离线可用 · 可安装到主屏", "pos": [792, 128], "size": [140, 74] },
+    { "id": "cert", "type": "security", "label": "自签 CA 证书", "sublabel": "手机装一次即可", "pos": [540, 368], "size": [184, 70] },
+    { "id": "gdrive", "type": "cloud", "label": "云盘中转备份", "sublabel": "rclone 单向备份", "pos": [792, 344], "size": [140, 74] }
+  ],
+  "boundaries": [
+    { "kind": "security-group", "label": "电脑端（数据面与控制面分离）", "wraps": ["native", "overlay", "merge", "server"] }
+  ],
+  "connections": [
+    { "id": "native-merge", "from": "native", "to": "merge", "variant": "emphasis" },
+    { "id": "overlay-merge", "from": "overlay", "to": "merge", "variant": "emphasis" },
+    { "id": "merge-server", "from": "merge", "to": "server", "variant": "emphasis" },
+    { "id": "server-pwa", "from": "server", "to": "pwa", "label": "HTTPS 读写", "variant": "emphasis" },
+    { "id": "cert-server", "from": "cert", "to": "server", "label": "签发证书", "variant": "dashed", "fromSide": "top", "toSide": "bottom", "labelDx": 78 },
+    { "id": "server-gdrive", "from": "server", "to": "gdrive", "variant": "dashed" }
+  ],
+  "cards": [
+    {
+      "dot": "cyan",
+      "title": "核心设计：overlay 叠加层，不碰原生数据",
+      "items": [
+        "原生知识库目录只读 —— 全程不改动原应用的数据结构",
+        "手机端新建/修改的笔记写到独立的 overlay 目录",
+        "读取时两路合并，按标题归一化去重，按更新时间排序",
+        "需要回写时走单独的 /api/writeback 接口，与读取路径分离"
+      ]
+    },
+    {
+      "dot": "rose",
+      "title": "为什么必须自签证书",
+      "items": [
+        "PWA 的 Service Worker 只在安全上下文（HTTPS 或 localhost）下注册",
+        "局域网 IP 无法申请公网证书，只能自签 CA",
+        "方案是双端口：HTTP 8787 只做证书引导页（其余请求跳转 HTTPS），HTTPS 8788 承载完整应用",
+        "手机上装一次本地 CA，之后即可正常使用离线缓存与安装到主屏"
+      ]
+    },
+    {
+      "dot": "amber",
+      "title": "两条同步路径与边界",
+      "items": [
+        "局域网直连：手机与电脑同网段时直连本地服务，实时读写",
+        "云盘中转：rclone 把知识库单向备份到网盘，解决不在同一网络时的访问",
+        "12 个 API 端点：items / note / changes / writeback / texts / image / cthumb / favorite / trash / ops / stats / health",
+        "已知边界：非双向实时同步（云盘侧是单向备份）、依赖 Python 与 openssl、证书需手动安装一次"
+      ]
+    }
+  ]
+}

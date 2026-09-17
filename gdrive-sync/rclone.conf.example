@@ -1,0 +1,20 @@
+# rclone 配置模板
+#
+# 用法：
+#   1. 复制本文件为 rclone.conf（同目录）
+#   2. 运行 `rclone.exe config` 或直接执行 1-连接Google账号.bat 走 OAuth 授权
+#      授权完成后，rclone 会自动把 token 写进 rclone.conf
+#   3. 注意：rclone.conf 等同于你的 Google 账号凭据，绝不要提交到 git
+#
+# 本文件已被 .gitignore 排除，仓库内不会出现真实凭据。
+
+[gdrive]
+type = drive
+scope = drive
+# 留空则使用 rclone 内置的公共 client_id（Google 正在逐步停用该通道，
+# 若授权失败请按下文自建通道后填入自己的值）
+client_id = 
+client_secret = 
+# OAuth 完成后由 rclone 自动写入，形如 {"access_token":"...","refresh_token":"...","expiry":"..."}
+token = 
+team_drive = 

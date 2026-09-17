@@ -1,0 +1,26 @@
+# ============ 凭据与私钥（绝不入库）============
+gdrive-sync/rclone.conf          # 含 Google OAuth token
+kb-server/data/certs/            # 含 CA 与服务器私钥（*.key）
+*.key
+*.pem
+token.txt
+
+# ============ 运行时数据与日志 ============
+kb-server/data/
+gdrive-sync/sync-log.txt
+*.log
+*.jsonl
+
+# ============ 外部二进制（体积大，按需自备）============
+gdrive-sync/rclone.exe
+gdrive-sync/rclone.zip
+rclone-v*/
+
+# ============ 构建与系统 ============
+_ud/
+.archify-*
+node_modules/
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
